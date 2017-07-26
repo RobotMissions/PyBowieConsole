@@ -6,8 +6,8 @@ This is a flask server that provides a simple web UI to control Bowie's function
 
 Components
 ==========
-Flask
-AngularJS
+* Flask
+* AngularJS
 
 Current Status
 ==============
