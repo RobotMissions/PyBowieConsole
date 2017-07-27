@@ -1,14 +1,53 @@
 <!doctype html>
 <html>
 <head>
-<title>Bowie Console</title>
-<script src="js/angular.min.js"></script>
-<script src="js/bowie.js"></script>
+    <title>Bowie Console</title>
+    <link rel="stylesheet" href="css/angular-material.min.css"/>
+    <link rel="stylesheet" href="css/bowie.css"/>
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-animate.min.js"></script>
+    <script src="js/angular-aria.min.js"></script>
+    <script src="js/angular-messages.min.js"></script>
+    <script src="js/angular-material.min.js"></script>
+    <script src="js/bowie.js"></script>
 </head>
-<body>
-<h1>Bowie Console</h1>
-<div ng-app="bowie">
-    <label>Superbright LEDS</label>&nbsp;<span lightswitch=""></span>
-</div>
+<body ng-app="bowie" ng-cloak="">
+    <div class="md-padding" layout="row">
+        <h1>Bowie Console</h1>
+    </div>
+    <div layout="row">
+        <div class="md-padding" flex="20" ng-controller="bowieCtl">
+            <div layout="row">
+                <span lightswitch="">
+                    <label>Superbright LEDS</label>
+                </span>
+            </div>
+            <div layout="row">
+                <md-button class="btn-red md-fab" aria-label="red" ng-click="redClicked();"></md-button>
+            </div>
+            <div layout="row">
+                <md-button class="btn-green md-fab" aria-label="green" ng-click="greenClicked();"></md-button>
+            </div>
+            <div layout="row">
+                <md-button class="btn-yellow md-fab" aria-label="yellow" ng-click="yellowClicked();"></md-button>
+            </div>
+            <div layout="row">
+                <md-button class="btn-blue md-fab" aria-label="blue" ng-click="blueClicked();"></md-button>
+            </div>
+            <div layout="row">
+                <md-button class="btn-white md-fab" aria-label="white" ng-click="whiteClicked();"></md-button>
+            </div>
+        </div>
+        <div flex="70">
+            <div layout="row">
+                <span>future video panel</span>
+            </div>
+            <div class="md-padding" layout="row">
+                <span>main controls</span>
+            </div>
+        </div>
+        <div class="md-padding" flex="">
+        </div>
+    </div>
 </body>
 </html>

@@ -10,5 +10,8 @@
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-contrib-watch": "~0.6.1",
     "jshint-stylish": "~1.0.0"
+  },
+  "dependencies": {
+    "angular-material": "^1.1.4"
   }
 }
