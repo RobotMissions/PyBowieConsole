@@ -8,8 +8,10 @@ Components
 ==========
 * Flask
 * AngularJS
+* AngularMaterial
 
 Current Status
 ==============
-This UI simply provides a checkbox to turn Super bright LEDs on and off. It is meant to test end-to
-end functionality for a basic function.
+This UI simply provides buttons and a switch for binary functions, a joystick for driving and a video area
+that contains a still image for now. The serial communication needs more work, but packets should be sent
+properly. Incomming serial data is not handled yet.
