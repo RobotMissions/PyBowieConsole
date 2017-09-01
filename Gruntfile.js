@@ -18,6 +18,15 @@ module.exports = function(grunt) {
                     'angular.min.js': 'angular/angular.min.js'
                 }
             },
+            angular-joystick: {
+                options: {
+                    destPrefix: 'pybowieconsole/js'
+                },
+                files: {
+                    'angular.js': 'angular-joystick/dist/angular-joystick.js',
+                    'angular.min.js': 'angular-joystick/dist/angular-joystick.min.js'
+                }
+            },
         },
         jshint: {
             options: {

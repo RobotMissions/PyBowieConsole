@@ -27,5 +27,6 @@ setup(
     author_email='dkavanagh@gmail.com',
     url='',
     keywords='',
-    packages=find_packages()
+    packages=find_packages(),
+    install_requires=requires
 )

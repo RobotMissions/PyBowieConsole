@@ -4,19 +4,21 @@
     <title>Bowie Console</title>
     <link rel="stylesheet" href="css/angular-material.min.css"/>
     <link rel="stylesheet" href="css/bowie.css"/>
+    <script src="js/jquery.min.js"></script>
     <script src="js/angular.min.js"></script>
     <script src="js/angular-animate.min.js"></script>
     <script src="js/angular-aria.min.js"></script>
     <script src="js/angular-messages.min.js"></script>
     <script src="js/angular-material.min.js"></script>
+    <script src="js/angular-joystick.js"></script>
     <script src="js/bowie.js"></script>
 </head>
 <body ng-app="bowie" ng-cloak="">
     <div class="md-padding" layout="row">
         <h1>Bowie Console</h1>
     </div>
-    <div layout="row">
-        <div class="md-padding" flex="20" ng-controller="bowieCtl">
+    <div layout="row" ng-controller="bowieCtl">
+        <div class="md-padding" flex="20">
             <div layout="row">
                 <span lightswitch="">
                     <label>Superbright LEDS</label>
@@ -24,26 +26,22 @@
             </div>
             <div layout="row">
                 <md-button class="btn-red md-fab" aria-label="red" ng-click="redClicked();"></md-button>
-            </div>
-            <div layout="row">
+                <md-button class="btn-yellow md-fab" aria-label="yellow" ng-click="yellowClicked();"></md-button>
                 <md-button class="btn-green md-fab" aria-label="green" ng-click="greenClicked();"></md-button>
             </div>
             <div layout="row">
-                <md-button class="btn-yellow md-fab" aria-label="yellow" ng-click="yellowClicked();"></md-button>
-            </div>
-            <div layout="row">
-                <md-button class="btn-blue md-fab" aria-label="blue" ng-click="blueClicked();"></md-button>
-            </div>
-            <div layout="row">
                 <md-button class="btn-white md-fab" aria-label="white" ng-click="whiteClicked();"></md-button>
+                <md-button class="btn-blue md-fab" aria-label="blue" ng-click="blueClicked();"></md-button>
+                <md-button class="btn-black md-fab" aria-label="black" ng-click="blackClicked();"></md-button>
             </div>
         </div>
         <div flex="70">
             <div layout="row">
-                <span>future video panel</span>
+                <img width="900px" height="500px" src="/images/VideoFeedPlaceholder.jpg"/>
             </div>
             <div class="md-padding" layout="row">
-                <span>main controls</span>
+                <span layout="column" layout-align="center" class="md-padding">main drive</span>
+                <angular-joystick layout="column" coords="coords", on-move="joystickMove()" />
             </div>
         </div>
         <div class="md-padding" flex="">

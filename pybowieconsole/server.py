@@ -29,6 +29,11 @@ def send_js(path):
     return send_from_directory('js', path)
 
 
+@app.route('/images/<path:path>')
+def send_images(path):
+    return send_from_directory('images', path)
+
+
 @app.route('/bowieaction', methods=['POST'])
 def bowie_action():
     req = json.loads(request.data)

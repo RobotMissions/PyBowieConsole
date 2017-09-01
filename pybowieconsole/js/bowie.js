@@ -1,4 +1,4 @@
-angular.module('bowie', ['ngMaterial'])
+angular.module('bowie', ['ngMaterial', 'angular-joystick'])
 .config(function($mdThemingProvider) {
   $mdThemingProvider.theme('default')
     .primaryPalette('blue')
@@ -41,6 +41,29 @@ angular.module('bowie', ['ngMaterial'])
     };
 }])
 .controller('bowieCtl', ['$scope', 'ActionService', function($scope, ActionService) {
+    $scope.coords = {x: 0, y: 0};
+    $scope.joystickMove = function() {
+        console.log("stick position: "+$scope.coords.x+","+$scope.coords.y);
+        // clamp values
+        var x_adj = $scope.coords.x > 0? Math.min($scope.coords.x, 40) :  Math.max($scope.coords.x, -40);
+        var y_adj = $scope.coords.y > 0? Math.min($scope.coords.y, 40) :  Math.max($scope.coords.y, -40);
+        // scale values
+        var x_adj = (x_adj / 40.0);
+        var y_adj = (y_adj / 40.0);
+        console.log("adj : "+x_adj+","+y_adj);
+        var l_speed = (y_adj) * 255;
+        var r_speed = (y_adj) * 255;
+        console.log("sd1 : "+l_speed+","+r_speed);
+        l_speed = Math.max(Math.min((y_adj + x_adj) * 255, 255), -255);
+        r_speed = Math.max(Math.min((y_adj + -x_adj) * 255, 255), -255);
+        console.log("sd2 : "+l_speed+","+r_speed);
+        var l_dir = l_speed < 0 ? '0' : '1';
+        var r_dir = r_speed < 0 ? '0' : '1';
+        console.log("dir : "+l_dir+","+r_dir);
+        l_speed = Math.abs(l_speed);
+        r_speed = Math.abs(r_speed);
+        ActionService.performAction('#', 'L', l_dir, Math.abs(l_speed), 'R', r_dir, Math.abs(r_speed));
+    };
     $scope.redClicked = function() {
         ActionService.performAction('#', 'P', '1', '1', 'P', '0', '0');
     };
@@ -55,6 +78,9 @@ angular.module('bowie', ['ngMaterial'])
     };
     $scope.whiteClicked = function() {
         ActionService.performAction('#', 'W', '1', '1', 'W', '0', '0');
+    };
+    $scope.blackClicked = function() {
+        ActionService.performAction('#', 'K', '1', '1', 'W', '0', '0');
     };
 }])
 ;
