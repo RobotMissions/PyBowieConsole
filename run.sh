@@ -1,4 +1,3 @@
 #!/bin/sh
 
-export FLASK_APP=pybowieconsole/server.py
-flask run
+python3 pybowieconsole/server.py
