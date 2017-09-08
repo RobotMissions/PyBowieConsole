@@ -12,7 +12,8 @@ with open(os.path.join(here, 'README.rst')) as f:
 
 
 requires = [
-    'flask',
+    'python3-flask',
+    'python3-serial'
 ]
 
 setup(
