@@ -13,22 +13,16 @@ import _thread
 import picamera
 import serial
 
-from flask import Flask, g
+from flask import Flask, g, current_app
 from flask import request, render_template, send_from_directory, send_file
 
 TEENSY_DEVICE = '/dev/ttyACM0'
 
 APP = Flask(__name__, static_folder='static', static_url_path='')
 
-
-def logserial(port, queue):
-    """
-    log serial data, send packets to queue
-    """
-    while True:
-        data = port.readline()
-        print(data)
-        #print("Logger "+":".join("{:02x}".format(c) for c in data))
+@APP.teardown_appcontext
+def close_serial(exception):
+    fd = g.get('serial_fd', None)
 
 def init_port():
     """
@@ -36,18 +30,30 @@ def init_port():
     """
     g.serial_fd = serial.Serial(TEENSY_DEVICE)
     g.packet_queue = queue.Queue(10)
-    print("setting up logger")
+    print('setting up logger')
+    def logserial(port, queue):
+        """
+        log serial data, send packets to queue
+        """
+        print('in logserial')
+        while True:
+            data = port.readline()
+            if chr(data[0]) == '$' and chr(data[-3]) == '!':  # assume it's a packet
+                print('Logger '+':'.join('{:02x}'.format(c) for c in data))
+                queue.put(data)
+            print(data)
     g.logger = _thread.start_new_thread(logserial, (g.serial_fd, g.packet_queue))
+    return g.serial_fd
 
 
 def write_command(action, cmd1, key1, value1, cmd2, key2, value2):
     """
     get port file descriptor and write command to it
     """
-    if getattr(g, 'serial_fd', None) is None:
-        init_port()
-    serial_fd = getattr(g, 'serial_fd', None)
-    print(serial_fd)
+    serial_fd = g.get('serial_fd', None)
+    print('in write_command ' + str(serial_fd))
+    if not serial_fd:
+        serial_fd = init_port()
     _write_command(serial_fd, action, cmd1, key1, value1, cmd2, key2, value2)
 
 
