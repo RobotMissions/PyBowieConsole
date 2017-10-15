@@ -4,7 +4,7 @@ angular.module('bowie', ['ngMaterial', 'angular-joystick'])
     .primaryPalette('blue')
     .accentPalette('orange');
 })
-.factory('ActionService', ['$http', '$interpolate', function($http, $interpolate) {
+.factory('ActionService', ['$http', function($http) {
     $http.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
     return {
         performAction: function(action, cmd1, key1, val1, cmd2, key2, val2) {
@@ -20,7 +20,19 @@ angular.module('bowie', ['ngMaterial', 'angular-joystick'])
                     key2: key2,
                     val2: val2
                 }
-             }).then( function(response) {
+             }).then(function(response) {
+                console.log(response);
+             });
+        }
+    };
+}])
+.factory('SensorService', ['$http', function($http) {
+    return {
+        getSensorPackets: function() {
+            return $http({
+                method: 'GET',
+                url: 'bowiesensors',
+             }).then(function(response) {
                 console.log(response);
              });
         }
@@ -40,7 +52,7 @@ angular.module('bowie', ['ngMaterial', 'angular-joystick'])
         }]
     };
 }])
-.controller('bowieCtl', ['$scope', 'ActionService', function($scope, ActionService) {
+.controller('bowieCtl', ['$scope', '$timeout', 'ActionService', 'SensorService', function($scope, $timeout, ActionService, SensorService) {
     $scope.coords = {x: 0, y: 0};
     $scope.joystickMove = function() {
         console.log("stick position: "+$scope.coords.x+","+$scope.coords.y);
@@ -82,5 +94,10 @@ angular.module('bowie', ['ngMaterial', 'angular-joystick'])
     $scope.blackClicked = function() {
         ActionService.performAction('#', 'K', '1', '1', 'W', '0', '0');
     };
+    $scope.getSensorData = function() {
+        SensorService.getSensorPackets();
+        $timeout(function() { $scope.getSensorData(); }, 4000);
+    };
+    $scope.getSensorData();
 }])
 ;
