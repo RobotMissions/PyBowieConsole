@@ -33,7 +33,7 @@ angular.module('bowie', ['ngMaterial', 'angular-joystick'])
                 method: 'GET',
                 url: 'bowiesensors',
              }).then(function(response) {
-                console.log(response);
+                console.log(response.data.data);
              });
         }
     };
@@ -53,8 +53,14 @@ angular.module('bowie', ['ngMaterial', 'angular-joystick'])
     };
 }])
 .controller('bowieCtl', ['$scope', '$timeout', 'ActionService', 'SensorService', function($scope, $timeout, ActionService, SensorService) {
+    var sendTime = new Date().getTime();
     $scope.coords = {x: 0, y: 0};
     $scope.joystickMove = function() {
+        var now = new Date().getTime();
+        if ((now - sendTime) < 100) {
+            return;
+        }
+        sendTime = now;
         console.log("stick position: "+$scope.coords.x+","+$scope.coords.y);
         // clamp values
         var x_adj = $scope.coords.x > 0? Math.min($scope.coords.x, 40) :  Math.max($scope.coords.x, -40);
@@ -70,7 +76,7 @@ angular.module('bowie', ['ngMaterial', 'angular-joystick'])
         r_speed = Math.max(Math.min((y_adj + -x_adj) * 255, 255), -255);
         console.log("sd2 : "+l_speed+","+r_speed);
         var l_dir = l_speed < 0 ? '0' : '1';
-        var r_dir = r_speed < 0 ? '0' : '1';
+        var r_dir = r_speed < 0 ? '1' : '0';
         console.log("dir : "+l_dir+","+r_dir);
         l_speed = Math.abs(l_speed);
         r_speed = Math.abs(r_speed);
@@ -92,7 +98,7 @@ angular.module('bowie', ['ngMaterial', 'angular-joystick'])
         ActionService.performAction('#', 'W', '1', '1', 'W', '0', '0');
     };
     $scope.blackClicked = function() {
-        ActionService.performAction('#', 'K', '1', '1', 'W', '0', '0');
+        ActionService.performAction('#', 'N', '1', '1', 'N', '0', '0');
     };
     $scope.getSensorData = function() {
         SensorService.getSensorPackets();
