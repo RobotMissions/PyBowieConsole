@@ -4,7 +4,9 @@ A flask server that presents a control panel for Bowie
 from __future__ import print_function
 
 from io import BytesIO
+import base64
 import json
+import logging
 import struct
 import queue
 import time
@@ -17,6 +19,7 @@ from flask import Flask
 from flask import request, render_template, send_from_directory, send_file
 
 TEENSY_DEVICE = '/dev/ttyACM0'
+TEENSY_DEVICE_ALT = '/dev/ttyACM1'
 
 APP = Flask(__name__, static_folder='static', static_url_path='')
 
@@ -24,21 +27,24 @@ APP = Flask(__name__, static_folder='static', static_url_path='')
 def close_serial(exception):
     pass #fd = g.get('serial_fd', None)
 
-_serial = serial.Serial(TEENSY_DEVICE)
+try:
+    _serial = serial.Serial(TEENSY_DEVICE)
+    print('Using port:'+TEENSY_DEVICE)
+except serial.serialutil.SerialException:
+    _serial = serial.Serial(TEENSY_DEVICE_ALT)
+    print('Using port:'+TEENSY_DEVICE_ALT)
 _queue = queue.Queue(10)
 
-print('setting up logger')
 def logserial(port, queue):
     """
     log serial data, send packets to queue
     """
-    print('in logserial')
     while True:
         data = port.readline()
         if chr(data[0]) == '$' and chr(data[-3]) == '!':  # assume it's a packet
             print('Logger '+':'.join('{:02x}'.format(c) for c in data))
             queue.put(data)
-        print(data)
+        print((data).decode('utf-8'))
 _thread.start_new_thread(logserial, (_serial, _queue))
 
 
@@ -66,9 +72,11 @@ def _write_command(port, action, cmd1, key1, value1, cmd2, key2, value2):
                        value2,
                        '!'.encode('ascii')
                       )
-    print("data len "+str(len(data)))
-    print(":".join("{:02x}".format(c) for c in data))
-    port.write(data)
+    #print("data len "+str(len(data)))
+    #print(":".join("{:02x}".format(c) for c in data))
+    port.write('$'.encode('ascii'))
+    port.write(base64.b64encode(data))
+    port.write('!'.encode('ascii'))
 
 
 @APP.route('/bowieaction', methods=['POST'])
@@ -91,8 +99,8 @@ def bowie_sensors():
     _queue
     print('in queue: '+str(_queue.qsize()))
     while _queue.qsize() > 0:
-        msgs.append(_queue.get())
-    return json.dumps(msgs)
+        msgs.append(_queue.get().decode('utf-8'))
+    return json.dumps(dict(data=msgs))
 
 
 @APP.route('/picam.jpg')
