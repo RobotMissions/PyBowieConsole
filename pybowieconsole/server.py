@@ -15,7 +15,7 @@ import _thread
 import picamera
 import serial
 
-from flask import Flask
+from flask import Flask, g
 from flask import request, render_template, send_from_directory, send_file
 
 TEENSY_DEVICE = '/dev/ttyACM0'
@@ -27,13 +27,19 @@ APP = Flask(__name__, static_folder='static', static_url_path='')
 def close_serial(exception):
     pass #fd = g.get('serial_fd', None)
 
-try:
-    _serial = serial.Serial(TEENSY_DEVICE)
-    print('Using port:'+TEENSY_DEVICE)
-except serial.serialutil.SerialException:
-    _serial = serial.Serial(TEENSY_DEVICE_ALT)
-    print('Using port:'+TEENSY_DEVICE_ALT)
-_queue = queue.Queue(10)
+_serial = None
+if not _serial:
+    try:
+        _serial = serial.Serial(TEENSY_DEVICE)
+        print('Using port:'+TEENSY_DEVICE)
+    except serial.serialutil.SerialException:
+        _serial = serial.Serial(TEENSY_DEVICE_ALT)
+        print('Using port:'+TEENSY_DEVICE_ALT)
+
+_queue = None
+if not _queue:
+    _queue = queue.Queue(10)
+
 
 def logserial(port, queue):
     """
@@ -73,7 +79,7 @@ def _write_command(port, action, cmd1, key1, value1, cmd2, key2, value2):
                        '!'.encode('ascii')
                       )
     #print("data len "+str(len(data)))
-    #print(":".join("{:02x}".format(c) for c in data))
+    print(":".join("{:02x}".format(c) for c in data))
     port.write('$'.encode('ascii'))
     port.write(base64.b64encode(data))
     port.write('!'.encode('ascii'))
@@ -109,9 +115,9 @@ def capture_picture():
     grab a frame from the camera and stream it back
     """
     cam = picamera.PiCamera()
-    byte_stream = BytesIO()
     cam.start_preview()
     time.sleep(2)
+    byte_stream = BytesIO()
     cam.capture(byte_stream, 'jpeg')
     cam.stop_preview()
     cam.close()

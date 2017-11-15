@@ -88,7 +88,7 @@ angular.module('angular-joystick').provider('JoystickService', function () {
             coords: _coords,
             squareSize: squareSize,
             _retractJoystickForInactivity: function(){
-                var framesPerSec = 15;
+                var framesPerSec = 5;
                 $timeout(function(){
                     var currentTime = new Date().getTime();
                     if(currentTime - lastTouch >= SECONDS_INACTIVE * 1000){

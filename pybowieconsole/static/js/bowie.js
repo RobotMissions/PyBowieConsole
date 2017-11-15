@@ -57,16 +57,16 @@ angular.module('bowie', ['ngMaterial', 'angular-joystick'])
     $scope.coords = {x: 0, y: 0};
     $scope.joystickMove = function() {
         var now = new Date().getTime();
-        if ((now - sendTime) < 100) {
-            return;
-        }
+        //if ((now - sendTime) < 100) {
+        //    return;
+        //}
         sendTime = now;
         console.log("stick position: "+$scope.coords.x+","+$scope.coords.y);
         // clamp values
         var x_adj = $scope.coords.x > 0? Math.min($scope.coords.x, 40) :  Math.max($scope.coords.x, -40);
         var y_adj = $scope.coords.y > 0? Math.min($scope.coords.y, 40) :  Math.max($scope.coords.y, -40);
         // scale values
-        var x_adj = (x_adj / 40.0);
+        var x_adj = -(x_adj / 40.0);
         var y_adj = (y_adj / 40.0);
         console.log("adj : "+x_adj+","+y_adj);
         var l_speed = (y_adj) * 255;
@@ -76,7 +76,7 @@ angular.module('bowie', ['ngMaterial', 'angular-joystick'])
         r_speed = Math.max(Math.min((y_adj + -x_adj) * 255, 255), -255);
         console.log("sd2 : "+l_speed+","+r_speed);
         var l_dir = l_speed < 0 ? '0' : '1';
-        var r_dir = r_speed < 0 ? '1' : '0';
+        var r_dir = r_speed < 0 ? '0' : '1';
         console.log("dir : "+l_dir+","+r_dir);
         l_speed = Math.abs(l_speed);
         r_speed = Math.abs(r_speed);
