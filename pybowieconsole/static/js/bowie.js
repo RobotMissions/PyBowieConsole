@@ -34,6 +34,10 @@ angular.module('bowie', ['ngMaterial', 'angular-joystick'])
                 url: 'bowiesensors',
              }).then(function(response) {
                 console.log(response.data.data);
+                response.data.data.forEach(function(elem) {
+                  var area = $('#sensors');
+                  area.val(area.val() + '\n' + elem);
+                });
              });
         }
     };

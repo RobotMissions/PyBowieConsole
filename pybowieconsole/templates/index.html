@@ -20,19 +20,25 @@
     <div layout="row" layout-align="center center" ng-controller="bowieCtl">
         <div>
             <div layout="row">
-                <img width="750px"height="400px" src="/picam.jpg"/>
+                <img id="frontview" width="750px"height="400px" src="/picam.jpg"/>
             </div>
             <div class="md-padding" layout="row" layout-align="center center">
                 <div layout="column" class="md-padding">
-                    <div layout="row">
+                    <div layout="row" layout-align="start center">
+<!--
                         <md-button class="btn-red md-fab" aria-label="red" ng-click="redClicked();" title="drive with joystick"></md-button>
                         <md-button class="btn-yellow md-fab" aria-label="yellow" ng-click="yellowClicked();" title="move arm with joystick"></md-button>
                         <md-button class="btn-green md-fab" aria-label="green" ng-click="greenClicked();" title="collect - fast"></md-button>
+-->
+                        <md-button class="btn-green md-fab" aria-label="white" ng-click="whiteClicked();" title="deposit"></md-button>
+			<label>Scoop Trash</label>
                     </div>
-                    <div layout="row">
-                        <md-button class="btn-white md-fab" aria-label="white" ng-click="whiteClicked();" title="deposit"></md-button>
+                    <div layout="row" layout-align="start center">
+<!--
                         <md-button class="btn-blue md-fab" aria-label="blue" ng-click="blueClicked();" title="collect - slow"></md-button>
-                        <md-button class="btn-black md-fab" aria-label="black" ng-click="blackClicked();" title="dance!"></md-button>
+-->
+                        <md-button class="btn-blue md-fab" aria-label="black" ng-click="blackClicked();" title="dance!"></md-button>
+			<label>Empty Hopper</label>
                     </div>
                 </div>
                 <div layout="column">
@@ -40,12 +46,17 @@
                         <angular-joystick layout="column" coords="coords", on-move="joystickMove()" />
                     </div>
                 </div>
+<!--
                 <div layout="column" class="md-padding">
                     <div layout="row">
                         <span lightswitch="">
                             <label>Superbright LEDS</label>
                         </span>
                     </div>
+                </div>
+-->
+                <div>
+                    <textarea id="sensors"></textarea>
                 </div>
             </div>
         </div>
