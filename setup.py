@@ -11,9 +11,7 @@ with open(os.path.join(here, 'README.rst')) as f:
     README = f.read()
 
 
-requires = [
-    'python3-flask'
-]
+requires = []
 
 setup(
     name='pybowieconsole',
