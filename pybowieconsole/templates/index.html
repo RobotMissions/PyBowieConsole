@@ -14,7 +14,7 @@
     <script src="js/bowie.js"></script>
 </head>
 <body ng-app="bowie" ng-cloak="">
-    <div class="" layout="row" layout-align="center center">
+    <div layout="row" layout-align="center center">
         <h2>Bowie Console</h2>
     </div>
     <div layout="row" layout-align="center center" ng-controller="bowieCtl">
@@ -25,20 +25,19 @@
             <div class="md-padding" layout="row" layout-align="center center">
                 <div layout="column" class="md-padding">
                     <div layout="row" layout-align="start center">
-<!--
                         <md-button class="btn-red md-fab" aria-label="red" ng-click="redClicked();" title="drive with joystick"></md-button>
                         <md-button class="btn-yellow md-fab" aria-label="yellow" ng-click="yellowClicked();" title="move arm with joystick"></md-button>
                         <md-button class="btn-green md-fab" aria-label="green" ng-click="greenClicked();" title="collect - fast"></md-button>
--->
-                        <md-button class="btn-green md-fab" aria-label="white" ng-click="whiteClicked();" title="deposit"></md-button>
-			<label>Scoop Trash</label>
                     </div>
                     <div layout="row" layout-align="start center">
-<!--
                         <md-button class="btn-blue md-fab" aria-label="blue" ng-click="blueClicked();" title="collect - slow"></md-button>
--->
-                        <md-button class="btn-blue md-fab" aria-label="black" ng-click="blackClicked();" title="dance!"></md-button>
-			<label>Empty Hopper</label>
+                        <md-button class="btn-white md-fab" aria-label="white" ng-click="whiteClicked();" title="deposit"></md-button>
+                        <md-button class="btn-black md-fab" aria-label="black" ng-click="blackClicked();" title="dance!"></md-button>
+                    </div>
+                    <div layout="row" layout-align="center center">
+                        <span lightswitch="">
+                            <label>Superbright LEDS</label>
+                        </span>
                     </div>
                 </div>
                 <div layout="column">
@@ -46,17 +45,24 @@
                         <angular-joystick layout="column" coords="coords", on-move="joystickMove()" />
                     </div>
                 </div>
-<!--
-                <div layout="column" class="md-padding">
-                    <div layout="row">
-                        <span lightswitch="">
-                            <label>Superbright LEDS</label>
-                        </span>
-                    </div>
-                </div>
--->
-                <div>
-                    <textarea id="sensors"></textarea>
+                <div layout="column" layout-fill="" class="md-padding">
+{% raw %}
+                    Accelerometer: X:{{sensorValues.A[0]}}, Y:{{sensorValues.A[1]}}, Z:{{sensorValues.A[2]}}
+                    <br/>
+                    Gyro: X:{{sensorValues.O[0]}}, Y:{{sensorValues.O[1]}}, Z:{{sensorValues.O[2]}}
+                    <br/>
+                    Force: Left:{{sensorValues.F[0]}}, Right:{{sensorValues.F[1]}}
+                    <br/>
+                    Sonar: Left:{{sensorValues.U[0]}}, Right:{{sensorValues.U[1]}}
+                    <br/>
+                    Magnetometer: X:{{sensorValues.M[0]}}, Y:{{sensorValues.M[1]}}, Z:{{sensorValues.M[2]}}
+                    <br/>
+                    Altitude: {{sensorValues.H[0]}}
+                    <br/>
+                    GPIO: 1:{{sensorValues.I[0]}}, 2:{{sensorValues.I[1]}}, 3:{{sensorValues.I[2]}}, 4:{{sensorValues.I[3]}}, 5:{{sensorValues.I[4]}}
+                    <br/>
+                    Temperature: {{sensorValues.T[0]}}
+{% endraw %}
                 </div>
             </div>
         </div>

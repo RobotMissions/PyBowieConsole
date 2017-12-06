@@ -33,8 +33,11 @@ if not _serial:
         _serial = serial.Serial(TEENSY_DEVICE)
         print('Using port:'+TEENSY_DEVICE)
     except serial.serialutil.SerialException:
-        _serial = serial.Serial(TEENSY_DEVICE_ALT)
-        print('Using port:'+TEENSY_DEVICE_ALT)
+        try:
+            _serial = serial.Serial(TEENSY_DEVICE_ALT)
+            print('Using port:'+TEENSY_DEVICE_ALT)
+        except serial.serialutil.SerialException:
+            print('Could not find serial port, trying to run anyway')
 
 _queue = None
 if not _queue:

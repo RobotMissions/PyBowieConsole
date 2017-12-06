@@ -27,16 +27,24 @@ angular.module('bowie', ['ngMaterial', 'angular-joystick'])
     };
 }])
 .factory('SensorService', ['$http', function($http) {
+    var parseSensorVal = function(sensorValues, valString) {
+        var sensor = valString[0];
+        var index = parseInt(valString[1]);
+        var value = parseInt(valString.substring(3, 5));
+        sensorValues[sensor][index] = value;
+    };
     return {
-        getSensorPackets: function() {
+        getSensorPackets: function(sensorValues) {
             return $http({
                 method: 'GET',
                 url: 'bowiesensors',
              }).then(function(response) {
                 console.log(response.data.data);
                 response.data.data.forEach(function(elem) {
-                  var area = $('#sensors');
-                  area.val(area.val() + '\n' + elem);
+                  if (elem[0] == '$') {
+                    parseSensorVal(sensorValues, elem.substring(1, 6));
+                    parseSensorVal(sensorValues, elem.substring(7, 12));
+                  }
                 });
              });
         }
@@ -57,6 +65,17 @@ angular.module('bowie', ['ngMaterial', 'angular-joystick'])
     };
 }])
 .controller('bowieCtl', ['$scope', '$timeout', 'ActionService', 'SensorService', function($scope, $timeout, ActionService, SensorService) {
+    $scope.sensorValues = {
+        'A': [0, 0, 0],        // accelerometer
+        'O': [0, 0, 0],        // gyro
+        'F': [0, 0],           // force
+        'U': [0, 0],           // sonar
+        'M': [0, 0, 0],        // magnetometer
+        'H': [0],              // altitude
+        'I': [0, 0, 0, 0, 0],  // GPIO
+        'T': [0],              // temperature
+        'W': [0, 0],           // robot id
+    };
     var sendTime = new Date().getTime();
     $scope.coords = {x: 0, y: 0};
     $scope.joystickMove = function() {
@@ -105,9 +124,15 @@ angular.module('bowie', ['ngMaterial', 'angular-joystick'])
         ActionService.performAction('#', 'N', '1', '1', 'N', '0', '0');
     };
     $scope.getSensorData = function() {
-        SensorService.getSensorPackets();
+        SensorService.getSensorPackets($scope.sensorValues);
         $timeout(function() { $scope.getSensorData(); }, 4000);
     };
     $scope.getSensorData();
+    $scope.updateImage = function() {
+        var millis = new Date().getMilliseconds();
+        $('#frontview').attr('src', '/picam.jpg?time='+millis);
+        //$timeout(function() { $scope.updateImage(); }, 5000);
+    };
+    $scope.updateImage();
 }])
 ;
