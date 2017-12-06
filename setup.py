@@ -12,9 +12,7 @@ with open(os.path.join(here, 'README.rst')) as f:
 
 
 requires = [
-    'python3-flask',
-    'python3-serial',
-    'python3-picamera'
+    'python3-flask'
 ]
 
 setup(
